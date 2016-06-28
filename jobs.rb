@@ -98,7 +98,8 @@ puts "  #{jr_count}  junior positions available."
 puts
 puts "------------------------------------------------------\n\n\n"
 
-
+puts "\n\n\nPress Enter To Run Advanced Analytics Over Every Post"
+user_response = gets.chomp
 
 
 
@@ -118,7 +119,7 @@ global_temp_array = []
 
 
 temp = 0
-50.times do |i|
+40.times do |i|
 
 	job_page = HTTParty.get("https://denver.craigslist.org/#{link_targets[i]}")
 
@@ -136,7 +137,8 @@ temp = 0
 	# SCAN FOR SPECIFIC MENTIONS IN JOB LISTING
 	keywords = %w[php Php PHP ruby Ruby rails Rails c++ C++ html, Html HTML XML xml css Css CSS sql Sql
 				 SQL javascript Javascript JavaScript java Java json Json JSON c# C# Knockout.js node.js 
-				 Node.js jquery jQuery bootstrap Bootstrap ]
+				 Node.js jquery jQuery bootstrap Bootstrap python Python iOS ios IOS Ios Swift swift SWIFT
+				  perl Perl PERL .net .Net .NET VisualBasic VB vb Vb objective-c Objective-C OBJECTIVE-C ]
 
 
 
@@ -148,40 +150,35 @@ temp = 0
 	keywords.each do |word|
 		found = job_body_content.scan(word).length
 
+
 		#if a keyword hits a mach, push it into an array! 
 		if found > 0
 		temp += found
 
-		#temp array applies only to current listing
+
+		#temp array applies only to current listing. Does not remove duplicate matches.
 		temp_array << job_body_content.scan(word)
-		#global array applies to all listing iterated over
-		global_temp_array << job_body_content.scan(word)
+
+		#global array applies to all listing iterated over. uniq method removes duplicate matches. 
+		global_temp_array << job_body_content.scan(word).uniq
 		end
 	end 
 
+
+
+
+	#temp is just a counter for found keywords
+	puts "\n\n\n"
+	puts "================================================="
 	puts temp
-
 	puts "================================================="
 	puts "================================================="
 	puts "================================================="
-	puts temp_array
+	puts temp_array #testing purposes
 	puts "================================================="
 	puts "================================================="
 	puts "================================================="
-
-=begin
-	job_body_content.scan("php")
-	job_body_content.scan("Php")
-	job_body_content.scan("PHP")
-
-	job_body_content.scan("ruby")
-	job_body_content.scan("Ruby")
-
-	job_body_content.scan()
-
-
-=end
-
+	puts "\n\n\n"
 
 
 
@@ -193,13 +190,27 @@ temp = 0
 	puts job_body_content
 	puts
 
-
 	puts "\n\n\n\n"
 
 
 end
-puts "\n\n\n\n"
-puts temp
-puts "\n\n\n\n"
-puts global_temp_array.sort	
 
+
+puts "\n\n\n\n"
+
+#temp is the num of matches made. TOTAL.
+puts temp
+puts "\n\n"
+
+#diplay languages mentioned by employers. 
+puts global_temp_array.sort
+
+
+
+#USE THIS METHOD TO PRINT EVERY LANGUAGE
+puts css_mentions = global_temp_array.join.scan('CSS').length
+puts html_mentions = global_temp_array.join.scan('HTML').length
+
+
+
+#Pry.start(binding)
