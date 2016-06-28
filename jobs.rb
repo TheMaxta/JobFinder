@@ -62,25 +62,26 @@ puts "\n\n\n"
 	puts
 
 end
-
-
-
 # deugging tool 4 dev
 #Pry.start(binding)
 
 
+
+## naming vars to increment when a keyword is matched.
 mobile_count = 0
 engineer_count = 0
 web_count = 0
 jr_count = 0
 
+#loops over listing titles. Searches for keywords and increments a counter
+#when a match is found.
 titles.each do |title|
 	mobile_found = title.scan("Mobile").length + title.scan("mobile").length
 	engineer_found = title.scan("Engineer").length + title.scan("engineer").length
 	web_found = title.scan("Web").length + title.scan("web").length
 	jr_found = title.scan("Junior").length + title.scan("junior").length + title.scan("Jr").length + title.scan("jr").length
 
-
+	#inc counters
 	mobile_count += mobile_found
 	engineer_count += engineer_found
 	web_count += web_found
@@ -88,7 +89,7 @@ titles.each do |title|
 
 end
 
-
+#display all data to console
 puts "\n\n-------------  Keyword Evaluation Found  -------------"
 puts
 puts "  #{mobile_count}  mobile related jobs available."
@@ -97,8 +98,9 @@ puts "  #{web_count}  web related jobs available."
 puts "  #{jr_count}  junior positions available."
 puts
 puts "------------------------------------------------------\n\n\n"
-
 puts "\n\n\nPress Enter To Run Advanced Analytics Over Every Post"
+
+#pauses program
 user_response = gets.chomp
 
 
@@ -113,16 +115,13 @@ user_response = gets.chomp
 
 
 
-
 #contains all keywords our scan loop found in all listings total
 global_temp_array = []
-
 
 temp = 0
 40.times do |i|
 
 	job_page = HTTParty.get("https://denver.craigslist.org/#{link_targets[i]}")
-
 	job_parse = Nokogiri::HTML(job_page)
 
 
