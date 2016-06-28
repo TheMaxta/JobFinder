@@ -96,7 +96,7 @@ puts "  #{engineer_count}  engineering jobs available."
 puts "  #{web_count}  web related jobs available."
 puts "  #{jr_count}  junior positions available."
 puts
-puts "------------------------------------------------------\n\n"
+puts "------------------------------------------------------\n\n\n"
 
 
 
@@ -110,18 +110,87 @@ puts "------------------------------------------------------\n\n"
 #2). could pull compensation, and employment type
 #3). needs to return location info for data pulled
 
-4.times do |i|
+
+
+
+#contains all keywords our scan loop found in all listings total
+global_temp_array = []
+
+
+temp = 0
+50.times do |i|
 
 	job_page = HTTParty.get("https://denver.craigslist.org/#{link_targets[i]}")
 
 	job_parse = Nokogiri::HTML(job_page)
 
 
+	## SET VARS, AND SCRAPING INSTUCTIONS FOR JOB LISTINGS
+	job_title = job_parse.css('.body').css('.postingtitle').css('#titletextonly').text
+	job_body_content = job_parse.css('.body').css('.userbody').css('#postingbody').text
+	job_compensation = 0 #later
+	job_hours = 0 #later
+
+
+
+	# SCAN FOR SPECIFIC MENTIONS IN JOB LISTING
+	keywords = %w[php Php PHP ruby Ruby rails Rails c++ C++ html, Html HTML XML xml css Css CSS sql Sql
+				 SQL javascript Javascript JavaScript java Java json Json JSON c# C# Knockout.js node.js 
+				 Node.js jquery jQuery bootstrap Bootstrap ]
+
+
+
+
+	#contains all keyword mentions in this specific listing
+	temp_array = []
+
+	#loops through every word in keywords and scans the listing content for those words
+	keywords.each do |word|
+		found = job_body_content.scan(word).length
+
+		#if a keyword hits a mach, push it into an array! 
+		if found > 0
+		temp += found
+
+		#temp array applies only to current listing
+		temp_array << job_body_content.scan(word)
+		#global array applies to all listing iterated over
+		global_temp_array << job_body_content.scan(word)
+		end
+	end 
+
+	puts temp
+
+	puts "================================================="
+	puts "================================================="
+	puts "================================================="
+	puts temp_array
+	puts "================================================="
+	puts "================================================="
+	puts "================================================="
+
+=begin
+	job_body_content.scan("php")
+	job_body_content.scan("Php")
+	job_body_content.scan("PHP")
+
+	job_body_content.scan("ruby")
+	job_body_content.scan("Ruby")
+
+	job_body_content.scan()
+
+
+=end
+
+
+
+
+	# DISPLAY ALL DATA BY FORMAT
 	puts "-------------------------------------------------------------------------------"
-	puts job_parse.css('.body').css('.postingtitle').css('#titletextonly').text
+	puts job_title
 	puts "-------------------------------------------------------------------------------"
 	puts 
-	puts job_parse.css('.body').css('.userbody').css('#postingbody').text
+	puts job_body_content
 	puts
 
 
@@ -129,7 +198,8 @@ puts "------------------------------------------------------\n\n"
 
 
 end
-
-
-
+puts "\n\n\n\n"
+puts temp
+puts "\n\n\n\n"
+puts global_temp_array.sort	
 
