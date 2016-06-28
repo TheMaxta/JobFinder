@@ -97,3 +97,39 @@ puts "  #{web_count}  web related jobs available."
 puts "  #{jr_count}  junior positions available."
 puts
 puts "------------------------------------------------------\n\n"
+
+
+
+
+
+
+
+## THE NEXT STEP IN THIS PROGRAM USES HREF LINKS TO SCRAPE ALL JOBS PAGES 
+## FOR EVEN MORE INFO
+#1). run keyword searches over all pages, and tell users how many times a language was mentioned
+#2). could pull compensation, and employment type
+#3). needs to return location info for data pulled
+
+4.times do |i|
+
+	job_page = HTTParty.get("https://denver.craigslist.org/#{link_targets[i]}")
+
+	job_parse = Nokogiri::HTML(job_page)
+
+
+	puts "-------------------------------------------------------------------------------"
+	puts job_parse.css('.body').css('.postingtitle').css('#titletextonly').text
+	puts "-------------------------------------------------------------------------------"
+	puts 
+	puts job_parse.css('.body').css('.userbody').css('#postingbody').text
+	puts
+
+
+	puts "\n\n\n\n"
+
+
+end
+
+
+
+
