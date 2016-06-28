@@ -37,12 +37,14 @@ parse.css('.content').css('.row').map do |tag|
 end
 
 
-
+#this is how we can select things with xpath, aswell :)
 temp = parse.css('.content').css('.row').xpath("//a[@class='hdrlnk']/@href")
 
 
-Pry.start(binding)
 
+
+
+#Printing out all data in orderly fashion :D
 puts "\n\n\n"
 puts "====================================================================================="
 puts "----------------------Programming jobs available in your area! ----------------------"
@@ -50,22 +52,48 @@ puts "==========================================================================
 
 puts "\n\n\n"
 
-100.time do |i|
+(99).downto(0) do |i|
 
 	puts
-	puts "Title: " + titles[i]
-	puts "Posted: " + times_posted[i]
-	puts "Location: " + locations[i]
-	puts "link to job: " + link_targets[i]
+	puts "Title:              " + titles[i]
+	puts "Posted:             " + times_posted[i]
+	puts "Location:          " + locations[i]
+	puts "Link to job:        " + "https://denver.craigslist.org" + link_targets[i]
 	puts
 
 end
 
 
-puts titles[0]
-puts times_posted[0]
-puts locations[0]
-puts link_targets[0]
+
+# deugging tool 4 dev
+#Pry.start(binding)
 
 
+mobile_count = 0
+engineer_count = 0
+web_count = 0
+jr_count = 0
 
+titles.each do |title|
+	mobile_found = title.scan("Mobile").length + title.scan("mobile").length
+	engineer_found = title.scan("Engineer").length + title.scan("engineer").length
+	web_found = title.scan("Web").length + title.scan("web").length
+	jr_found = title.scan("Junior").length + title.scan("junior").length + title.scan("Jr").length + title.scan("jr").length
+
+
+	mobile_count += mobile_found
+	engineer_count += engineer_found
+	web_count += web_found
+	jr_count += jr_found
+
+end
+
+
+puts "\n\n-------------  Keyword Evaluation Found  -------------"
+puts
+puts "  #{mobile_count}  mobile related jobs available."
+puts "  #{engineer_count}  engineering jobs available."
+puts "  #{web_count}  web related jobs available."
+puts "  #{jr_count}  junior positions available."
+puts
+puts "------------------------------------------------------\n\n"
