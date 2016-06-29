@@ -4,7 +4,38 @@ require 'JSON'
 require 'Pry'			#debugging gem	
 require 'csv'
 
-page = HTTParty.get('https://denver.craigslist.org/search/jjj?excats=12-1-2-1-7-1-1-1-1-1-19-1-1-3-2-1-2-2-2-14-25-25-1-1-1-1-1-1')
+
+#https://geo.craigslist.org/iso/us 
+cities = %w[ denver abilene akroncanton albanyga albany albuquerque altoona amarillo ames anchorage annapolis 
+	annarbor appleton asheville ashtabula athensga athensohio atlanta auburn augusta austin]
+
+
+
+puts cities
+puts "Please enter your city, as it appears on craigslist.."
+city = gets.chomp
+
+#Need to check for valid cities
+	temp_val = 0
+	cities.each do |key|
+		if city == key
+			temp_val = 1
+		else
+			#do nothing
+		end
+
+	end
+
+	if temp_val == 1 
+		#continue
+	else
+		puts "\n\n\nNon-valid entry. Exiting program\n\n"
+		exit
+	end
+
+
+								## plug city in uri
+page = HTTParty.get("https://#{city}.craigslist.org/search/jjj?excats=12-1-2-1-7-1-1-1-1-1-19-1-1-3-2-1-2-2-2-14-25-25-1-1-1-1-1-1")
 
 #pass html string to nokogiri ruby object
 parse = Nokogiri::HTML(page)
@@ -72,6 +103,7 @@ mobile_count = 0
 engineer_count = 0
 web_count = 0
 jr_count = 0
+sr_count = 0
 
 #loops over listing titles. Searches for keywords and increments a counter
 #when a match is found.
@@ -80,13 +112,15 @@ titles.each do |title|
 	engineer_found = title.scan("Engineer").length + title.scan("engineer").length
 	web_found = title.scan("Web").length + title.scan("web").length
 	jr_found = title.scan("Junior").length + title.scan("junior").length + title.scan("Jr").length + title.scan("jr").length
+	sr_found = title.scan("Senior").length + title.scan("senior").length + title.scan("Sr").length + title.scan("sr").length
+
 
 	#inc counters
 	mobile_count += mobile_found
 	engineer_count += engineer_found
 	web_count += web_found
 	jr_count += jr_found
-
+	sr_count += sr_found
 end
 
 #display all data to console
@@ -96,13 +130,21 @@ puts "  #{mobile_count}  mobile related jobs available."
 puts "  #{engineer_count}  engineering jobs available."
 puts "  #{web_count}  web related jobs available."
 puts "  #{jr_count}  junior positions available."
+puts "  #{sr_count}  senior positions available."
 puts
-puts "------------------------------------------------------\n\n\n"
+puts
+puts "------------------------------------------------------\n"
+puts "      from the #{100} jobs evaluated.      \n\n"
 puts "\n\n\nPress Enter To Run Advanced Analytics Over Every Post"
 
 #pauses program
 user_response = gets.chomp
-
+puts
+puts "How many posts should we run?   ---   (MAX: 100)"
+puts
+post_count = gets.chomp.to_i	#sets loop to user specification
+puts
+puts
 
 
 
@@ -119,13 +161,13 @@ user_response = gets.chomp
 global_temp_array = []
 
 temp = 0
-40.times do |i|
+post_count.times do |i|
 
-	job_page = HTTParty.get("https://denver.craigslist.org/#{link_targets[i]}")
+	job_page = HTTParty.get("https://#{city}.craigslist.org/#{link_targets[i]}")
 	job_parse = Nokogiri::HTML(job_page)
 
 
-	## SET VARS, AND SCRAPING INSTUCTIONS FOR JOB LISTINGS
+	## SET VARS, AND SCRAPING INSTUCTIONS FOR JO BLISTINGS
 	job_title = job_parse.css('.body').css('.postingtitle').css('#titletextonly').text
 	job_body_content = job_parse.css('.body').css('.userbody').css('#postingbody').text
 	job_compensation = 0 #later
@@ -205,10 +247,41 @@ puts "\n\n"
 puts global_temp_array.sort
 
 
+#ARRAY FOR STORING A NUMBER OF KEYWORD MATCHES
+mention_counts = []
 
-#USE THIS METHOD TO PRINT EVERY LANGUAGE
-puts css_mentions = global_temp_array.join.scan('CSS').length
-puts html_mentions = global_temp_array.join.scan('HTML').length
+languages = %w[CSS HTML JavaScript jQuery Bootstrap SQL PHP Python Java Ruby Rails C# Swift C++ .NET]
+
+languages.each do |term|
+
+	mention_counts << global_temp_array.join.scan(term).length
+
+
+end
+
+	puts mention_counts
+
+
+puts
+
+(mention_counts.length).times do |z|
+
+
+	puts "#{mention_counts[z]} listings mentioned a proficiency in #{languages[z]}."
+	puts "That's #{(mention_counts[z].to_f / post_count.to_f * 100).to_i}% of jobs found.\n\n"
+
+
+	end
+
+
+#Now, we want to display the top 5 in-demand languages. from 1 to 5
+
+
+sorted_mention_counts = mention_counts
+
+#puts "Top 5 Languages Found:"
+#This doesn't work. 
+
 
 
 
