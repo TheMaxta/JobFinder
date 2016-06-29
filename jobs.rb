@@ -7,8 +7,13 @@ require 'csv'
 
 #https://geo.craigslist.org/iso/us 
 cities = %w[ denver abilene akroncanton albanyga albany albuquerque altoona amarillo ames anchorage annapolis 
-	annarbor appleton asheville ashtabula athensga athensohio atlanta auburn augusta austin]
+	annarbor appleton asheville ashtabula athensga athensohio atlanta auburn augusta austin bakersfield baltimore
+	 batonrouge battlecreek beaumont bellingham bemidji bend sandiego sanantonio newyork seattle chicago 
+	 orangecounty losangeles louisville ]
 
+
+#for looping and pulling data from all cities to evaluate trends	 
+big_cities = %w[ denver sandiego sanantonio newyork seattle chicago orangecounty losangeles louisville ]
 
 puts "City Examples: \n\n"
 puts cities
