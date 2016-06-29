@@ -10,9 +10,10 @@ cities = %w[ denver abilene akroncanton albanyga albany albuquerque altoona amar
 	annarbor appleton asheville ashtabula athensga athensohio atlanta auburn augusta austin]
 
 
-
+puts "City Examples: \n\n"
 puts cities
-puts "Please enter your city, as it appears on craigslist.."
+puts "visit https://geo.craigslist.org/iso/us and type the city that applies for you."
+puts "\n\nPlease enter your city, as it appears on craigslist.."
 city = gets.chomp
 
 #Need to check for valid cities
@@ -32,6 +33,10 @@ city = gets.chomp
 		puts "\n\n\nNon-valid entry. Exiting program\n\n"
 		exit
 	end
+
+
+
+
 
 
 								## plug city in uri
@@ -83,7 +88,8 @@ puts "==========================================================================
 
 puts "\n\n\n"
 
-(99).downto(0) do |i|
+
+(titles.length-1).downto(0) do |i|
 
 	puts
 	puts "Title:              " + titles[i]
@@ -133,9 +139,9 @@ puts "  #{jr_count}  junior positions available."
 puts "  #{sr_count}  senior positions available."
 puts
 puts
-puts "------------------------------------------------------\n"
-puts "      from the #{100} jobs evaluated.      \n\n"
-puts "\n\n\nPress Enter To Run Advanced Analytics Over Every Post"
+puts "------------------------------------------------------\n\n"
+puts "      from the #{titles.length} jobs evaluated.      \n\n"
+puts "\n\nPress Enter To Run Advanced Analytics Over Every Post"
 
 #pauses program
 user_response = gets.chomp
@@ -268,11 +274,11 @@ puts
 
 
 	puts "#{mention_counts[z]} listings mentioned a proficiency in #{languages[z]}."
-	puts "That's #{(mention_counts[z].to_f / post_count.to_f * 100).to_i}% of jobs found.\n\n"
+	puts "That's #{(mention_counts[z].to_f / post_count.to_f * 100).to_i}% of the jobs found.\n\n"
 
 
 	end
-
+	puts "\n\njava and javascript may be inaccurate!!"
 
 #Now, we want to display the top 5 in-demand languages. from 1 to 5
 
