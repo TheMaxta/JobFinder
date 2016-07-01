@@ -16,10 +16,12 @@ cities = %w[ denver abilene akroncanton albanyga albany albuquerque altoona amar
 big_cities = %w[ denver sandiego sanantonio newyork seattle chicago orangecounty losangeles louisville ]
 
 puts "City Examples: \n\n"
-puts cities
-puts "visit https://geo.craigslist.org/iso/us and type the city that applies for you."
-puts "\n\nPlease enter your city, as it appears on craigslist.."
-city = gets.chomp
+puts big_cities
+
+puts "\n\n\nvisit https://geo.craigslist.org/iso/us for all cities"
+puts "press enter to update all big cities. Will take a long time.\n\n\n"
+
+gets.chomp
 
 #Need to check for valid cities
 	temp_val = 0
@@ -38,6 +40,7 @@ city = gets.chomp
 		puts "\n\n\nNon-valid entry. Exiting program\n\n"
 		exit
 	end
+
 
 
 
