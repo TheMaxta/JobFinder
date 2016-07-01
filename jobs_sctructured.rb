@@ -44,34 +44,77 @@ class ProgramController
 
 	end
 
+
+	def createCapitalizedWords(words)
+
+		words = words.map do |word|
+
+			word.capitalize
+
+		end
+
+		return words
+	end
+
+	def createUpcasedWords(words)
+
+		words = words.map do |word|
+
+			word.upcase
+			
+		end
+
+		return words
+	end
+
 	def set_keywords
 		puts "\n\nWhat kind of keywords would you like the program to scan for?\n"
 		puts "Type 1 for preset keywords.\n\n"
 		response = gets.chomp
-		if response == 1
+		if response == '1'
 
-				@keywords = %w[php Php PHP ruby Ruby rails Rails c++ C++ html, Html HTML XML xml css Css CSS sql Sql
-				 SQL javascript Javascript JavaScript java Java json Json JSON c# C# Knockout.js node.js 
-				 Node.js jquery jQuery bootstrap Bootstrap python Python iOS ios IOS Ios Swift swift SWIFT
-				  perl Perl PERL .net .Net .NET VisualBasic VB vb Vb objective-c Objective-C OBJECTIVE-C ]
-				  set_pages_to_load(@keywords)
+
+				@keywords = %w[php ruby rails c++ html xml css sql
+							  javascript  JavaScript java json c# Knockout.js node.js 
+							 Node.js jquery jQuery bootstrap Bootstrap python iOS ios IOS Ios swift
+							  perl .net .Net .NET VisualBasic vb objective-c Objective-C ]
+
+
+				@keywordsCap = createCapitalizedWords(@keywords)
+				@keywordsUp = createUpcasedWords(@keywords)
+
+				@keywords << @keywordsCap
+				@keywords << @keywordsUp
+
+				puts @keywords
+
+				return(@keywords)
+
+
+		else
+
+			puts "Please Enter 5 Keywords.\n"
+
+			@keywords = []
+			5.times do |i|
+			    puts "keyword#{i+1}:    "
+				temp = gets.chomp
+			    @keywords << temp
+			end
+
+			@keywordsCap = createCapitalizedWords(@keywords)
+			@keywordsUp = createUpcasedWords(@keywords)
+
+			#append together for simplicity
+			@keywords << @keywordsCap
+			@keywords << @keywordsUp
+
+			puts @keywords
+			
+			return(@keywords)
+
 		end
-
-		puts "Please Enter 5 Keywords.\n"
-
-		@keywords = []
-		5.times do |i|
-		    puts "keyword#{i}:    "
-			temp = gets.chomp
-		    @keywords << temp
-		end
-
-		@keywordsCap = createCapitalizedWords(@keywords)
-		@keywordsUp = createUpcaseWords(@keywords)
-		set_pages_to_load(@keywords)
-
-
-	end
+	end ## end set_keywords
 
 	def set_posts_to_load
 
@@ -84,42 +127,6 @@ class ProgramController
 	end
 
 
-
-
-	def createCapitalizedWords(words)
-		words.each do |word|
-
-			word.capitalize!
-
-		end
-
-		return words
-	end
-
-	def createUpcasedWords(words)
-		words.each do |word|
-
-			word.upcase!
-			
-		end
-
-		return words
-	end
-
-
-
-	def listofcities
-		@cities = %w[ denver sandiego sanantonio newyork seattle chicago orangecounty losangeles louisville ]
-	end
-
-	def listofwebsites
-		@websites = %w[Craigslist.org Indeed.com Monster.com ]
-	end
-
-	def listofsearches
-		@searches = %w[ /search/jjj?excats=12-1-2-1-7-1-1-1-1-1-19-1-1-3-2-1-2-2-2-14-25-25-1-1-1-1-1-1 ]
-		#only contains one list currently. search sets to programming jobs... list[0]
-	end
 
 	class CreateUriObject
 		def initialize(protocol, host, city, search)
