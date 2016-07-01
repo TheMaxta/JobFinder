@@ -1,54 +1,53 @@
+require 'HTTParty'		#sends request to page
+require 'Nokogiri'		#places xml info into ruby object
+require 'JSON'			
+require 'Pry'			#debugging gem	
+require 'csv'
 
-class CreateUriObject
-	attr_accessor, 
-	def initialize(protocol, host, city, search)
-		@protocol = protocol
-		@host = host
-		@city = city
-		@category = category
-	end
+	#AS OF NOW, ONLY CRAIGSLIST WORKS!!
 
-	def plugInVars
-		@page = HTTParty.get("#{protocol}#{city}.#{host}#{@search}")
-		#page = HTTParty.get("https://#{city}.craigslist.org/search/jjj?excats=12-1-2-1-1")
-
-		@parsed = Nokogiri::HTML(@page)
-
-		return(@parsed)
-	end
-
-end
 
 class ProgramController
+
+	def initialize
+
+		@cities = %w[ denver sandiego sanantonio newyork seattle chicago orangecounty losangeles louisville ]
+
+		@websites = %w[Craigslist.org Indeed.com Monster.com ]
+
+		@searches = %w[ /search/jjj?excats=12-1-2-1-7-1-1-1-1-1-19-1-1-3-2-1-2-2-2-14-25-25-1-1-1-1-1-1 ]
+		#only contains one list currently. search sets to programming jobs... list[0]
+
+	end
+
 	def welcome
-		puts "\n\n============================================================\n\n"
+		puts "\n\n\n\n============================================================\n\n"
 		puts "Welcome to the Job Finder!!"
 		puts "Coded by: Max Mahlke."
-		puts "\n\n============================================================\n\n"
-
+		puts "\n============================================================\n\n\n"
 		puts "Press Enter To Commence Jobifying!!"
-
+		gets.chomp
+		puts "\n\n\n\n\n\n"
 		set_uri()
 
 	end
 
 	def set_uri
-		
 		instance1 = Settings.new
 		@protocol = 'https://www.'
 		@host = instance1.set_host(@websites)
 		@city = instance1.set_city(@cities)
 		@search = instance1.set_search(@searches) ## what categories?
-		UriInstance = CreateUriObject.new(@protocol, @host, @city, @search)
-		@parsedPage = UriInstance.plugInVars
-		@keywords = set_keywords(@parsedPage) #pass on controll to next method
+		uriInstance = CreateUriObject.new(@protocol, @host, @city, @search)
+		@parsedPage = uriInstance.plugInVars
+		@keywords = set_keywords() #pass on controll to next method
 
 	end
 
 	def set_keywords
 		puts "\n\nWhat kind of keywords would you like the program to scan for?\n"
 		puts "Type 1 for preset keywords.\n\n"
-		respone = gets.chomp
+		response = gets.chomp
 		if response == 1
 
 				@keywords = %w[php Php PHP ruby Ruby rails Rails c++ C++ html, Html HTML XML xml css Css CSS sql Sql
@@ -85,7 +84,6 @@ class ProgramController
 	end
 
 
-	def 
 
 
 	def createCapitalizedWords(words)
@@ -124,16 +122,20 @@ class ProgramController
 	end
 
 	class CreateUriObject
-		attr_accessor, 
 		def initialize(protocol, host, city, search)
 			@protocol = protocol
 			@host = host
 			@city = city
-			@category = category
+			@search = search
 		end
 
 		def plugInVars
-			@page = HTTParty.get("#{protocol}#{city}.#{host}#{@search}")
+			puts @protocol
+			puts @city
+			@host = @host.downcase
+			puts @host
+			puts @search
+			@page = HTTParty.get("https://#{@city}.#{@host}#{@search}") #protocol causes crash...
 			#page = HTTParty.get("https://#{city}.craigslist.org/search/jjj?excats=12-1-2-1-1")
 
 			@parsed = Nokogiri::HTML(@page)
@@ -145,13 +147,21 @@ class ProgramController
 	
 	class Settings
 
-
+		def printList(array)
+			int = 1
+			array.each do |i| 
+				puts "#{int}).   #{i}"
+				int += 1
+			end
+		end
 
 		def set_host(list)
+
+			puts "These are websites we currently support. Please choose one by typing it in."
 	
 			printList(list) ## doesn't return anything. just puts command.
 
-			puts "These are websites we currently support. Please choose one."
+			puts "\n\n"
 
 			response = gets.chomp
 			
@@ -198,7 +208,7 @@ class ProgramController
 		def set_search(list)
 			printList(list)
 			puts "Please Select your choice of jobs to search for."
-
+			gets.chomp
 			response = list[0] ## Not Settup yet!! 
 
 			validate = checkResponse(response, list)
@@ -222,23 +232,15 @@ class ProgramController
 
 				if checkThis == against
 					puts "Return True"
-					true
+					return true
 				else
-					puts "Return False"
-					false
 				end
 		end ## end checkResponse method
 
-		def printList(array)
-			int = 1
-			list.each do |i| 
-				puts "#{int}).   #{i}"
-				int += 1
-			end
-		end
-
 
 	end ## end settings class
+end
+end
 
-
-end ## end of program controller
+test = ProgramController.new
+test.welcome
